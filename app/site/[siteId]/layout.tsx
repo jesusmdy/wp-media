@@ -47,9 +47,6 @@ export default function SiteLayout({children, params}: props) {
 
   return (
     <div className="w-screen h-screen flex">
-      <div className="w-2/12 sm:w-3/12 border-r border-zinc-700 overflow-auto">
-        <SiteList />
-      </div>
       <div className="flex-1 h-screen overflow-auto">
         <SiteHeader site={currentSite as TSite} />
         {children}
