@@ -1,3 +1,4 @@
+import { SaveIcon } from "@/components/icons";
 import { useCurrentSiteStore } from "@/store/site";
 import { useSiteNavigation } from "@/store/siteNavigation";
 import Link from "next/link";
@@ -27,10 +28,11 @@ export default function BookmarkLink() {
   if (!currentSite || !page) return null;
   return (
     <Link
-      href={`/site/${currentSite.id}/page/${page}/saved`}
-      className="size-8 border rounded flex items-center justify-center border-zinc-700 text-zinc-400"
+      href={`/bookmarks`}
+      className="px-4 py-2 text-xs gap-2 border rounded-lg flex items-center justify-center border-zinc-700 text-zinc-400"
     >
-      <BookmarkListIcon />
+      <SaveIcon />
+      <span>Saved</span>
     </Link>
   );
 }

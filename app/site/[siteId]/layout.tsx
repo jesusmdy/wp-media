@@ -46,11 +46,9 @@ export default function SiteLayout({children, params}: props) {
   if (isLoading) return <GlobalSpinner />
 
   return (
-    <div className="w-screen h-screen flex">
-      <div className="flex-1 h-screen overflow-auto">
-        <SiteHeader site={currentSite as TSite} />
-        {children}
-      </div>
+    <div className="w-screen h-screen flex flex-col">
+      <SiteHeader site={currentSite as TSite} />
+      {children}
     </div>
   )
 }

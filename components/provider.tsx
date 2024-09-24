@@ -20,8 +20,6 @@ function BookmarksProvider(props: PropsWithChildren) {
 }
 
 export default function Provider({children}: PropsWithChildren) {
-  const [storedBookmarks, setStoredBookmarks] = useLocalStorage("bookmarks", null)
-  console.log(storedBookmarks, 'stored bookmark')
 
   const [isLoading, setIsLoading] = useState(true)
   const addSite = useSiteStore().addSite

@@ -12,7 +12,6 @@ export default function SiteHeader({ site }: { site: TSite }) {
       <AddButton />
       <div className="flex-1"></div>
       <BookmarkLink />
-      <PageControls />
     </div>
   );
 }
