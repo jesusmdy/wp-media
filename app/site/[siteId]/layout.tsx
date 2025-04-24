@@ -1,54 +1,56 @@
-'use client'
+"use client";
 
-import SiteHeader from "@/components/site/header";
-import { SiteList } from "@/components/sites/list";
+import PageControls from "@/components/site/page/controls";
+import FilterList from "@/components/site/filters";
 import GlobalSpinner from "@/components/spinner";
 import { useCurrentSiteStore } from "@/store/site";
-import { TSite, useSiteStore } from "@/store/sites";
+import { useSiteStore } from "@/store/sites";
 import _ from "lodash";
 import { usePathname, useRouter } from "next/navigation";
-import { Fragment, PropsWithChildren, useEffect, useState } from "react";
+import { PropsWithChildren, useEffect, useState } from "react";
 
 interface props extends PropsWithChildren {
   params: {
     siteId: string;
-  }
+  };
 }
 
-export default function SiteLayout({children, params}: props) {
-  const siteId = params.siteId
-  const {currentSite, setCurrentSite} = useCurrentSiteStore()
-  const {sites} = useSiteStore()
-  const [isLoading, setIsLoading] = useState(true)
-  const router = useRouter()
-  const pathname = usePathname()
+export default function SiteLayout({ children, params }: props) {
+  const siteId = params.siteId;
+  const { currentSite, setCurrentSite } = useCurrentSiteStore();
+  const { sites } = useSiteStore();
+  const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter();
+  const pathname = usePathname();
 
-  useEffect(
-    () => {
-      const site = _.find(sites, {id: siteId})
-      if (site) {
-        setCurrentSite(site)
-      }
-      setIsLoading(false)
-    },
-    []
-  )
+  useEffect(() => {
+    const site = _.find(sites, { id: siteId });
+    if (site) {
+      setCurrentSite(site);
+    }
+    setIsLoading(false);
+  }, []);
 
-  useEffect(
-    () => {
-      if (currentSite && pathname === `/site/${currentSite.id}`) {
-        router.push(`/site/${currentSite.id}/page/1`)
-      }
-    },
-    [currentSite, pathname]
-  )
+  useEffect(() => {
+    if (currentSite && pathname === `/site/${currentSite.id}`) {
+      router.push(`/site/${currentSite.id}/page/1`);
+    }
+  }, [currentSite, pathname]);
 
-  if (isLoading) return <GlobalSpinner />
+  if (isLoading) return <GlobalSpinner />;
 
   return (
     <div className="w-screen h-screen flex flex-col">
-      <SiteHeader site={currentSite as TSite} />
-      {children}
+      <div className="flex">
+        <div className="size-2/12 sticky top-0 border-r border-zinc-700 bg-zinc-900 h-screen">
+          <FilterList />
+        </div>
+        <div className="flex-1 flex flex-col h-screen">
+          {children}
+
+          <PageControls />
+        </div>
+      </div>
     </div>
-  )
+  );
 }

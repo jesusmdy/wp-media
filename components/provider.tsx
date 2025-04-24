@@ -1,5 +1,5 @@
-'use client'
-import { useSiteStore } from "@/store/sites";
+"use client";
+import { TSite, useSiteStore } from "@/store/sites";
 import _ from "lodash";
 import { PropsWithChildren, useEffect, useState } from "react";
 import GlobalSpinner from "./spinner";
@@ -7,51 +7,39 @@ import { useBookmarksStore } from "@/store/bookmarks";
 import { useLocalStorage } from "@uidotdev/usehooks";
 
 function BookmarksProvider(props: PropsWithChildren) {
-  const {bookmarks} = useBookmarksStore()
-  
-  useEffect(
-    () => {
-      localStorage.setItem('bookmarks', JSON.stringify(bookmarks))
-    },
-    [bookmarks]
-  )
+  const { bookmarks } = useBookmarksStore();
 
-  return props.children
+  useEffect(() => {
+    localStorage.setItem("bookmarks", JSON.stringify(bookmarks));
+  }, [bookmarks]);
+
+  return props.children;
 }
 
-export default function Provider({children}: PropsWithChildren) {
+export default function Provider({ children }: PropsWithChildren) {
+  const [isLoading, setIsLoading] = useState(true);
+  const addSite = useSiteStore().addSite;
+  const sites = useSiteStore().sites;
+  const { setBookmarks } = useBookmarksStore();
 
-  const [isLoading, setIsLoading] = useState(true)
-  const addSite = useSiteStore().addSite
-  const sites = useSiteStore().sites
-  const {setBookmarks} = useBookmarksStore()
+  useEffect(() => {
+    const storedSites = localStorage.getItem("sites");
+    if (storedSites) {
+      const sites = JSON.parse(storedSites);
+      _.forEach(sites, addSite);
+    }
+    const storedBookmarks = localStorage.getItem("bookmarks");
+    if (storedBookmarks) {
+      const bookmarks = JSON.parse(storedBookmarks);
+      setBookmarks(bookmarks);
+    }
+    setIsLoading(false);
+  }, []);
 
-  useEffect(
-    () => {
-      const storedSites = localStorage.getItem('sites')
-      if (storedSites) {
-        const sites = JSON.parse(storedSites)
-        _.forEach(sites, addSite)
-      }
-      const storedBookmarks = localStorage.getItem('bookmarks')
-      if (storedBookmarks) {
-        const bookmarks = JSON.parse(storedBookmarks)
-        setBookmarks(bookmarks)
-      }
-      setIsLoading(false)
-    },
-    []
-  )
+  useEffect(() => {
+    localStorage.setItem("sites", JSON.stringify(_.uniqBy(sites, "url")));
+  }, [sites]);
 
-  useEffect(
-    () => {
-      localStorage.setItem('sites', JSON.stringify(sites))
-    },
-    [sites]
-  )
-
-  if (isLoading) return <GlobalSpinner />
-  return (
-    <BookmarksProvider>{children}</BookmarksProvider>
-  )
+  if (isLoading) return <GlobalSpinner />;
+  return <BookmarksProvider>{children}</BookmarksProvider>;
 }

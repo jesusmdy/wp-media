@@ -13,7 +13,7 @@ import {
 } from "react";
 
 const ButtonElement = (
-  props: PropsWithChildren<ButtonHTMLAttributes<HTMLButtonElement>>
+  props: PropsWithChildren<ButtonHTMLAttributes<HTMLButtonElement>>,
 ) => (
   <button
     {...props}
@@ -21,7 +21,7 @@ const ButtonElement = (
       "flex items-center gap-2 px-4 py-2 rounded-full text-xs text-zinc-300",
       "border border-transparent hover:border-indigo-700",
       "bg-transparent hover:bg-indigo-900 hover:text-indigo-300",
-      "transition-all duration-75"
+      "transition-all duration-75",
     )}
   >
     {props.children}
@@ -66,9 +66,9 @@ const NextButton = () => {
 
 const PageControls: FC = () => {
   return (
-    <div className="border-t border-zinc-700 h-20 flex items-center justify-center gap-4">
+    <div className="border-t border-zinc-700 p-2 flex items-center justify-center gap-4">
+      <div className="flex-1"></div>
       <PreviousButton />
-      <span className="pointer-events-none select-none text-zinc-700">·</span>
       <NextButton />
     </div>
   );

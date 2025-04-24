@@ -6,7 +6,7 @@ import MediaOverlay from "./overlay";
 import { useToggle } from "@uidotdev/usehooks";
 
 export function MediaItem({ media }: { media: TMedia }) {
-  const [on, toggle] = useToggle()
+  const [on, toggle] = useToggle();
   const mediaRenderer = useMemo(() => {
     switch (media.mime_type) {
       case "image/jpeg":

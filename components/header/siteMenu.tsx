@@ -50,32 +50,17 @@ function Item({ site, currentSite }: { site: TSite; currentSite: TSite }) {
     <MenuItem>
       <Link
         className={classNames(
-          "data-[focus]:bg-zinc-700 px-4 py-2 flex items-center rounded-lg gap-2",
-          isCurrent && "bg-zinc-800 text-blue-500"
+          "data-[focus]:bg-zinc-700 px-2 py-2 flex items-center rounded-md gap-2",
+          isCurrent && "bg-zinc-800 text-blue-500",
         )}
         href={`/site/${site.id}/page/1`}
       >
         <img
-          className="size-6 bg-zinc-700 rounded-md"
+          className="size-5 bg-zinc-700 rounded-md"
           src={`${site.url}/favicon.ico`}
         />
-        <span className="flex-1">{siteDetails.host}</span>
+        <span className="flex-1 text-sm truncate">{siteDetails.host}</span>
         {isCurrent && <CheckIcon />}
-      </Link>
-    </MenuItem>
-  );
-}
-
-function AddItem() {
-  return (
-    <MenuItem>
-      <Link
-        className={classNames(
-          "data-[focus]:bg-zinc-700 px-4 py-2 flex items-center rounded-lg gap-2"
-        )}
-        href="/"
-      >
-        <span className="flex-1">Add new site</span>
       </Link>
     </MenuItem>
   );
@@ -86,23 +71,22 @@ export function SiteMenu({ site }: { site: TSite }) {
   const siteDetails = new URL(site.url);
 
   return (
-    <div className="flex items-center gap-2 rounded-lg border border-transparent hover:border-zinc-700 hover:bg-zinc-800 transition-all duration-50 text-zinc-400 px-1">
+    <div className="flex items-center gap-2 rounded-md border border-transparent hover:border-zinc-700 hover:bg-zinc-800 transition-all duration-50 text-zinc-400 px-1">
       <a href={site.url} target="_blank">
         <img
-          className="size-6 bg-zinc-700 rounded-md"
+          className="size-5 bg-zinc-700 rounded-md shrink-0"
           src={`${site.url}/favicon.ico`}
         />
       </a>
       <Menu>
-        <MenuButton className="flex items-center gap-2 px-2 py-1 rounded-lg">
+        <MenuButton className="flex items-center gap-2 px-2 py-1 rounded-md">
           <span>{siteDetails.host}</span>
           <ChevronDownIcon />
         </MenuButton>
         <MenuItems
           anchor="bottom"
-          className="bg-zinc-900 border border-zinc-700 rounded-xl w-1/2 md:w-1/5 text-zinc-400 p-4 flex flex-col gap-4 z-20"
+          className="bg-zinc-900 border border-zinc-700 rounded-md w-1/2 md:w-1/5 text-zinc-400 p-2 flex flex-col z-20 m-2"
         >
-          <AddItem />
           {_.map(sites, (item) => (
             <Item key={item.id} site={item} currentSite={site} />
           ))}

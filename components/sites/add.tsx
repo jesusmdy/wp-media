@@ -1,28 +1,42 @@
+import { fetcher } from "@/api/fetcher";
 import { useSiteStore } from "@/store/sites";
 import { generateUUID } from "@/utils";
 import { useForm } from "react-hook-form";
+import useSWR from "swr";
 
 interface IForm {
   url: string;
+}
+
+function isURL(string: string) {
+  return /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/.test(
+    string,
+  );
+}
+
+function clearUrl(url: string) {
+  const isInsecure = url.startsWith("http://");
+  const isSecure = url.startsWith("https://");
+  const hasProtocol = isInsecure || isSecure;
+  const formedUrl = new URL(hasProtocol ? url : `https://${url}`);
+  const startsWithWWW = url.startsWith("www.");
+  const canonicalUrl = `${formedUrl.protocol}//${formedUrl.hostname}`;
+  return canonicalUrl;
 }
 
 export default function Controls() {
   const form = useForm<IForm>();
   const addSite = useSiteStore().addSite;
 
-  function clearUrl(url: string) {
-    const formedUrl = new URL(url);
-    const canonicalUrl = `${formedUrl.protocol}//${formedUrl.hostname}`;
-    return canonicalUrl;
-  }
-
   async function tryWordpressMediaAPI(url: string) {
     try {
-      const request = await fetch(`${url}/wp-json/wp/v2/media`);
+      const request = await fetch(`${url}/wp-json/wp/v2/media`, {
+        method: "GET",
+      });
       const response = await request.json();
       if (response.length === 0) {
         alert(
-          `No media found at ${url}. Please make sure you have media enabled.`
+          `No media found at ${url}. Please make sure you have media enabled.`,
         );
         return false;
       }
@@ -30,18 +44,19 @@ export default function Controls() {
     } catch (e) {
       console.error(`Error fetching media from ${url}:`, e);
       alert(
-        `Error fetching media from ${url}. Please make sure you have the correct URL.`
+        `Error fetching media from ${url}. Please make sure you have the correct URL.`,
       );
       return false;
     }
   }
 
   const onSubmit = async (data: IForm) => {
-    if (data.url.startsWith("https://") || data.url.startsWith("http://")) {
+    const isValidURL = isURL(data.url);
+    if (isValidURL) {
       const saneUrl = clearUrl(data.url);
       const isValidSite = await tryWordpressMediaAPI(saneUrl);
       if (!isValidSite) {
-        form.reset()
+        form.reset();
         return;
       }
       addSite({ id: generateUUID(), url: saneUrl });
